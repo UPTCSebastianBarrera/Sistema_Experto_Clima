@@ -446,13 +446,16 @@ class ConsejeroVestimentario(KnowledgeEngine):
           Meteo(sol=2))  # Lluvia
     def calido_alta_humedad_uv_alto_viento_moderado_lluvia(self):
         self.consejos.append("Clima cálido y húmedo con UV alto, viento moderado y lluvia. Usa ropa ligera, impermeable, protector solar y una chaqueta cortavientos.")
-        
-    # Método para mostrar el consejo
-    def mostrar_consejo(self):
+
+    # Método para mostrar el consejo en el Text widget
+    def mostrar_consejo(self, text_widget):
         if not self.consejos:
             self.consejos.append("No hay una recomendación específica para esta combinación.")
+        
         consejo_final = "\n".join(self.consejos)
-        messagebox.showinfo("Consejo Vestimentario", consejo_final)
+        text_widget.insert(tk.END, consejo_final + "\n")
+        text_widget.insert(tk.END, "------------------------------------------------------------\n")
+        text_widget.see(tk.END)  # Desplaza automáticamente hacia abajo
 
 
 # Interfaz gráfica con Tkinter
@@ -460,7 +463,7 @@ root = tk.Tk()
 root.title("Consejero Vestimentario")
 
 # Definir el tamaño de la ventana
-width = 400
+width = 800
 height = 500
 root.geometry(f"{width}x{height}")
 
@@ -474,6 +477,17 @@ y = (screen_height // 2) - (height // 2)
 
 # Posicionar la ventana en el centro de la pantalla
 root.geometry(f'+{x}+{y}')
+
+# Crear el marco principal
+frame = tk.Frame(root)
+frame.pack(fill=tk.BOTH, expand=True)
+
+# Crear dos módulos (una parte para las opciones y otra para el texto)
+frame_left = tk.Frame(frame, width=400)
+frame_left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+frame_right = tk.Frame(frame, width=400)
+frame_right.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 # Variables para los botones de opción
 temp_var = tk.IntVar()
@@ -494,40 +508,39 @@ def enviar_opciones():
     consejero = ConsejeroVestimentario()
     consejero.reset()
 
-    consejero.declare(Meteo(temp=temp, humedad=humedad, uv=uv, viento=viento, sol=sol, precip=sol))
+    consejero.declare(Meteo(temp=temp, humedad=humedad, uv=uv, viento=viento, sol=sol))
     consejero.run()
-    consejero.mostrar_consejo()
+    consejero.mostrar_consejo(text_widget)
 
+# Widgets para las opciones
+tk.Label(frame_left, text="Temperatura:").pack()
+tk.Radiobutton(frame_left, text="0-15", variable=temp_var, value=0).pack()
+tk.Radiobutton(frame_left, text="16-25", variable=temp_var, value=16).pack()
+tk.Radiobutton(frame_left, text="26-35", variable=temp_var, value=26).pack()
 
-# Widgets para la temperatura
-tk.Label(root, text="Temperatura:").pack()
-tk.Radiobutton(root, text="0-15", variable=temp_var, value=0).pack()
-tk.Radiobutton(root, text="16-25", variable=temp_var, value=16).pack()
-tk.Radiobutton(root, text="26-35", variable=temp_var, value=26).pack()
+tk.Label(frame_left, text="Humedad:").pack()
+tk.Radiobutton(frame_left, text="0-30", variable=humedad_var, value=30).pack()
+tk.Radiobutton(frame_left, text="31-60", variable=humedad_var, value=60).pack()
 
-# Widgets para la humedad
-tk.Label(root, text="Humedad:").pack()
-tk.Radiobutton(root, text="0-30", variable=humedad_var, value=30).pack()
-tk.Radiobutton(root, text="31-60", variable=humedad_var, value=60).pack()
+tk.Label(frame_left, text="Índice UV:").pack()
+tk.Radiobutton(frame_left, text="Bajo", variable=uv_var, value=1).pack()
+tk.Radiobutton(frame_left, text="Medio", variable=uv_var, value=5).pack()
 
-# Widgets para el índice UV
-tk.Label(root, text="Índice UV:").pack()
-tk.Radiobutton(root, text="Bajo", variable=uv_var, value=1).pack()
-tk.Radiobutton(root, text="Medio", variable=uv_var, value=5).pack()
+tk.Label(frame_left, text="Viento:").pack()
+tk.Radiobutton(frame_left, text="Calmado", variable=viento_var, value=0).pack()
+tk.Radiobutton(frame_left, text="Moderado", variable=viento_var, value=10).pack()
 
-# Widgets para el viento
-tk.Label(root, text="Viento:").pack()
-tk.Radiobutton(root, text="Calmado", variable=viento_var, value=0).pack()
-tk.Radiobutton(root, text="Moderado", variable=viento_var, value=10).pack()
-
-# Widgets para la condición del día
-tk.Label(root, text="Condición del día:").pack()
-tk.Radiobutton(root, text="Despejado", variable=sol_var, value=1).pack()
-tk.Radiobutton(root, text="Lluvia", variable=sol_var, value=2).pack()
+tk.Label(frame_left, text="Condición del día:").pack()
+tk.Radiobutton(frame_left, text="Despejado", variable=sol_var, value=1).pack()
+tk.Radiobutton(frame_left, text="Lluvia", variable=sol_var, value=2).pack()
 
 # Botón de envío
-submit_button = tk.Button(root, text="Enviar", command=enviar_opciones)
-submit_button.pack()
+submit_button = tk.Button(frame_left, text="Enviar", command=enviar_opciones)
+submit_button.pack(pady=10)
+
+# Crear un widget de texto en el lado derecho para mostrar las recomendaciones
+text_widget = tk.Text(frame_right, wrap=tk.WORD, height=30, width=40)
+text_widget.pack(fill=tk.BOTH, expand=True)
 
 # Ejecutar la aplicación Tkinter
 root.mainloop()
