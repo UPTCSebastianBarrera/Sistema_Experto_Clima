@@ -13,144 +13,447 @@ class ConsejeroVestimentario(KnowledgeEngine):
         super().__init__()
         self.consejos = []
 
-    # Ejemplo de combinaciones con diferentes niveles de temperatura, humedad, uv, viento, sol y precipitación.
+    # Combinaciones simplificadas
 
- # Clima frío (0-15°C), baja humedad, bajo UV, viento en calma, soleado, sin precipitación
+    # 1. Clima frío (0-15°C), baja humedad (0-30), bajo UV, viento calmado, despejado
     @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
+          Meteo(uv=P(lambda uv: uv == 1)),
           Meteo(viento=P(lambda viento: viento == 0)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def frio_baja_humedad_sin_lluvia(self):
-        self.consejos.append("Clima frío, soleado y seco. Usa ropa abrigada ligera, sin necesidad de impermeable.")
+          Meteo(sol=1))  # Despejado
+    def frio_baja_humedad_uv_bajo_viento_calma_despejado(self):
+        self.consejos.append("Hace frío, con baja humedad y sin viento. Usa ropa abrigada ligera y gafas de sol, no se necesita impermeable.")
 
-    # Clima frío (0-15°C), baja humedad, bajo UV, viento moderado, nublado, lluvia
+    # 2. Clima frío (0-15°C), baja humedad (0-30), bajo UV, viento calmado, lluvia
     @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
-          Meteo(viento=P(lambda viento: viento > 0 and viento <= 10)),
-          Meteo(sol=2),  # Nublado
-          Meteo(precip=1))  # Lluvia
-    def frio_baja_humedad_lluvia_nublado(self):
-        self.consejos.append("Clima frío, nublado y lluvioso. Usa un abrigo impermeable y suéter grueso.")
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def frio_baja_humedad_uv_bajo_viento_calma_lluvia(self):
+        self.consejos.append("Hace frío, con baja humedad y lluvia. Usa un impermeable ligero y ropa abrigada, no se necesita ropa pesada.")
 
-    # Clima templado (16-25°C), alta humedad, medio UV, viento fuerte, soleado, sin precipitación
+    # 3. Clima frío (0-15°C), baja humedad (0-30), bajo UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def frio_baja_humedad_uv_bajo_viento_moderado_despejado(self):
+        self.consejos.append("Hace frío con viento moderado. Usa una chaqueta cortavientos y gafas de sol, ideal para el clima seco.")
+
+    # 4. Clima frío (0-15°C), baja humedad (0-30), bajo UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def frio_baja_humedad_uv_bajo_viento_moderado_lluvia(self):
+        self.consejos.append("Hace frío con viento moderado y lluvia. Usa una chaqueta impermeable y bufanda ligera para protegerte del viento y la lluvia.")
+
+    # 5. Clima frío (0-15°C), alta humedad (31-60), bajo UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def frio_alta_humedad_uv_bajo_viento_calma_despejado(self):
+        self.consejos.append("Hace frío con alta humedad y sin viento. Usa ropa abrigada y gafas de sol, ideal para el clima seco pero con algo de humedad.")
+
+    # 6. Clima frío (0-15°C), alta humedad (31-60), bajo UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def frio_alta_humedad_uv_bajo_viento_calma_lluvia(self):
+        self.consejos.append("Hace frío con alta humedad y lluvia. Usa ropa térmica e impermeable, es recomendable llevar botas.")
+
+    # 7. Clima frío (0-15°C), alta humedad (31-60), bajo UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def frio_alta_humedad_uv_bajo_viento_moderado_despejado(self):
+        self.consejos.append("Hace frío, alta humedad y viento moderado. Usa ropa abrigada, un cortavientos y gafas de sol.")
+
+    # 8. Clima frío (0-15°C), alta humedad (31-60), bajo UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def frio_alta_humedad_uv_bajo_viento_moderado_lluvia(self):
+        self.consejos.append("Hace frío, alta humedad, viento moderado y lluvia. Usa ropa térmica e impermeable y un cortavientos para protegerte del viento.")
+
+    # 9. Clima templado (16-25°C), baja humedad (0-30), bajo UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def templado_baja_humedad_uv_bajo_viento_calma_despejado(self):
+        self.consejos.append("Clima templado, baja humedad y sin viento. Usa ropa ligera y cómoda, no necesitas abrigo.")
+
+    # 10. Clima templado (16-25°C), baja humedad (0-30), bajo UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def templado_baja_humedad_uv_bajo_viento_calma_lluvia(self):
+        self.consejos.append("Clima templado con lluvia y baja humedad. Usa ropa ligera e impermeable, ideal para el clima húmedo.")
+
+    # 11. Clima templado (16-25°C), baja humedad (0-30), bajo UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def templado_baja_humedad_uv_bajo_viento_moderado_despejado(self):
+        self.consejos.append("Clima templado y seco, con viento moderado. Usa ropa ligera y cómoda, una chaqueta ligera por si acaso.")
+
+    # 12. Clima templado (16-25°C), baja humedad (0-30), bajo UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def templado_baja_humedad_uv_bajo_viento_moderado_lluvia(self):
+        self.consejos.append("Clima templado, con lluvia y viento moderado. Usa ropa ligera, impermeable y cortavientos para el viento y la lluvia.")
+
+    # 13. Clima templado (16-25°C), baja humedad (0-30), medio UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def templado_baja_humedad_uv_medio_viento_calma_despejado(self):
+        self.consejos.append("Clima templado con bajo viento y UV medio. Usa ropa ligera y protector solar, ideal para un día soleado.")
+
+    # 14. Clima templado (16-25°C), baja humedad (0-30), medio UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def templado_baja_humedad_uv_medio_viento_calma_lluvia(self):
+        self.consejos.append("Clima templado con lluvia y UV medio. Usa ropa ligera e impermeable, además de un paraguas para protegerte.")
+
+    # 15. Clima templado (16-25°C), baja humedad (0-30), medio UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def templado_baja_humedad_uv_medio_viento_moderado_despejado(self):
+        self.consejos.append("Clima templado con viento moderado y UV medio. Usa ropa ligera, protector solar, y una chaqueta ligera para el viento.")
+
+    # 16. Clima templado (16-25°C), baja humedad (0-30), medio UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def templado_baja_humedad_uv_medio_viento_moderado_lluvia(self):
+        self.consejos.append("Clima templado con viento moderado y lluvia. Usa ropa impermeable y un cortavientos, ideal para mantenerte seco y protegido.")
+
+    # 17. Clima templado (16-25°C), alta humedad (31-60), medio UV, viento calmado, despejado
     @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
           Meteo(humedad=P(lambda humedad: humedad > 30)),
-          Meteo(uv=P(lambda uv: uv > 1 and uv <= 5)),
-          Meteo(viento=P(lambda viento: viento > 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def templado_alta_humedad_sin_lluvia_viento_fuerte(self):
-        self.consejos.append("Clima templado con alta humedad y viento fuerte. Usa ropa ligera, pero protege tu cara del viento.")
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def templado_alta_humedad_uv_medio_viento_calma_despejado(self):
+        self.consejos.append("Clima templado y húmedo con UV medio. Usa ropa ligera y transpirable, y no olvides el protector solar.")
 
-    # Clima muy cálido (26-35°C), baja humedad, alto UV, viento moderado, soleado, sin precipitación
-    @Rule(Meteo(temp=P(lambda temp: temp > 25)),
+    # 18. Clima templado (16-25°C), alta humedad (31-60), medio UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def templado_alta_humedad_uv_medio_viento_calma_lluvia(self):
+        self.consejos.append("Clima templado, con lluvia y alta humedad. Usa ropa ligera e impermeable, y trata de mantenerte fresco bajo la lluvia.")
+
+    # 19. Clima templado (16-25°C), alta humedad (31-60), medio UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def templado_alta_humedad_uv_medio_viento_moderado_despejado(self):
+        self.consejos.append("Clima templado con humedad alta y viento moderado. Usa ropa ligera, protector solar y una chaqueta ligera para el viento.")
+
+    # 20. Clima templado (16-25°C), alta humedad (31-60), medio UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def templado_alta_humedad_uv_medio_viento_moderado_lluvia(self):
+        self.consejos.append("Clima templado con humedad alta, lluvia y viento moderado. Usa ropa ligera e impermeable, además de una chaqueta cortavientos.")
+
+    # 21. Clima cálido (26-35°C), baja humedad (0-30), bajo UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv > 5)),
-          Meteo(viento=P(lambda viento: viento > 0 and viento <= 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def muy_calido_baja_humedad_uv_alto(self):
-        self.consejos.append("Clima muy cálido, UV alto y sin precipitación. Usa protector solar, ropa ligera y gafas de sol.")
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_bajo_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido y seco, sin viento. Usa ropa ligera, gafas de sol y protector solar para evitar quemaduras.")
+
+    # 22. Clima cálido (26-35°C), baja humedad (0-30), bajo UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_bajo_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido, seco y con lluvia. Usa ropa ligera e impermeable, ideal para un día caluroso con lluvias ligeras.")
+
+    # 23. Clima cálido (26-35°C), baja humedad (0-30), bajo UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_bajo_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido con viento moderado. Usa ropa ligera, gafas de sol y una chaqueta ligera para el viento.")
+
+    # 24. Clima cálido (26-35°C), baja humedad (0-30), bajo UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 1)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_bajo_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido con viento moderado y lluvia. Usa ropa ligera, impermeable y una chaqueta cortavientos para el viento y la lluvia.")
     
-    # Clima frío (0-15°C), baja humedad, bajo UV, viento en calma, soleado, lluvia
-    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+    # 25. Clima cálido (26-35°C), baja humedad (0-30), medio UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
+          Meteo(uv=P(lambda uv: uv == 5)),
           Meteo(viento=P(lambda viento: viento == 0)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=1))  # Lluvia
-    def frio_baja_humedad_lluvia(self):
-        self.consejos.append("Hace frío con baja humedad y lluvia. Usa un impermeable ligero y suéter.")
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_medio_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido con UV medio y sin viento. Usa ropa ligera, gafas de sol y protector solar para protegerte del sol.")
 
-    # Clima frío (0-15°C), baja humedad, bajo UV, viento en calma, nublado, lluvia
-    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+    # 26. Clima cálido (26-35°C), baja humedad (0-30), medio UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
+          Meteo(uv=P(lambda uv: uv == 5)),
           Meteo(viento=P(lambda viento: viento == 0)),
-          Meteo(sol=2),  # Nublado
-          Meteo(precip=1))  # Lluvia
-    def frio_baja_humedad_lluvia_nublado(self):
-        self.consejos.append("Hace frío con baja humedad, nublado y con lluvia. Usa un impermeable ligero y una bufanda.")
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_medio_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido con UV medio y lluvia. Usa ropa ligera e impermeable, ideal para un día caluroso con lluvias.")
 
-    # Clima frío (0-15°C), baja humedad, bajo UV, viento moderado, soleado, lluvia
-    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+    # 27. Clima cálido (26-35°C), baja humedad (0-30), medio UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
-          Meteo(viento=P(lambda viento: viento > 0 and viento <= 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=1))  # Lluvia
-    def frio_baja_humedad_lluvia_viento_moderado(self):
-        self.consejos.append("Hace frío, con lluvia y viento moderado. Usa una chaqueta impermeable y suéter grueso.")
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_medio_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido con UV medio y viento moderado. Usa ropa ligera, protector solar y una chaqueta ligera para el viento.")
 
-    # Clima frío (0-15°C), baja humedad, bajo UV, viento fuerte, soleado, lluvia
-    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+    # 28. Clima cálido (26-35°C), baja humedad (0-30), medio UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
-          Meteo(viento=P(lambda viento: viento > 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=1))  # Lluvia
-    def frio_baja_humedad_lluvia_viento_fuerte(self):
-        self.consejos.append("Hace frío con viento fuerte y lluvia. Usa un abrigo impermeable y bufanda gruesa.")
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_medio_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido con UV medio, viento moderado y lluvia. Usa ropa ligera e impermeable, con chaqueta cortavientos para protegerte del viento y la lluvia.")
 
-    # Clima frío (0-15°C), alta humedad, bajo UV, viento fuerte, soleado, lluvia
-    @Rule(Meteo(temp=P(lambda temp: temp <= 15)),
+    # 29. Clima cálido (26-35°C), alta humedad (31-60), medio UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad > 30)),
-          Meteo(uv=P(lambda uv: uv <= 1)),
-          Meteo(viento=P(lambda viento: viento > 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=1))  # Lluvia
-    def frio_alta_humedad_lluvia_viento_fuerte(self):
-        self.consejos.append("Hace frío con lluvia, viento fuerte y alta humedad. Usa ropa térmica e impermeable.")
-
-    # Clima templado (16-25°C), baja humedad, medio UV, viento en calma, soleado, sin precipitación
-    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
-          Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv > 1 and uv <= 5)),
+          Meteo(uv=P(lambda uv: uv == 5)),
           Meteo(viento=P(lambda viento: viento == 0)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def templado_baja_humedad_sin_lluvia(self):
-        self.consejos.append("Clima templado con baja humedad y sin lluvia. Usa ropa ligera y una gorra.")
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_medio_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido con humedad alta y UV medio. Usa ropa transpirable y ligera, protector solar y gafas de sol.")
 
-    # Clima templado (16-25°C), alta humedad, medio UV, viento moderado, soleado, sin precipitación
-    @Rule(Meteo(temp=P(lambda temp: 16 <= temp <= 25)),
+    # 30. Clima cálido (26-35°C), alta humedad (31-60), medio UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad > 30)),
-          Meteo(uv=P(lambda uv: uv > 1 and uv <= 5)),
-          Meteo(viento=P(lambda viento: viento > 0 and viento <= 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def templado_alta_humedad_sin_lluvia(self):
-        self.consejos.append("Clima templado con alta humedad y sin lluvia. Usa ropa ligera y ventilada.")
-
-    # Clima muy cálido (26-35°C), alta humedad, alto UV, viento en calma, soleado, sin precipitación
-    @Rule(Meteo(temp=P(lambda temp: temp > 25)),
-          Meteo(humedad=P(lambda humedad: humedad > 30)),
-          Meteo(uv=P(lambda uv: uv > 5)),
+          Meteo(uv=P(lambda uv: uv == 5)),
           Meteo(viento=P(lambda viento: viento == 0)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def muy_calido_alta_humedad_sin_lluvia(self):
-        self.consejos.append("Clima muy cálido, alta humedad y sin lluvia. Usa ropa ligera, protector solar y mantente hidratado.")
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_medio_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido con humedad alta, UV medio y lluvia. Usa ropa ligera e impermeable, ideal para mantenerte fresco en la lluvia.")
 
-    # Clima muy cálido (26-35°C), baja humedad, alto UV, viento fuerte, soleado, sin precipitación
-    @Rule(Meteo(temp=P(lambda temp: temp > 25)),
+    # 31. Clima cálido (26-35°C), alta humedad (31-60), medio UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_medio_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido con humedad alta y viento moderado. Usa ropa ligera, transpirable y protector solar para protegerte del sol.")
+
+    # 32. Clima cálido (26-35°C), alta humedad (31-60), medio UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_medio_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido con humedad alta, viento moderado y lluvia. Usa ropa ligera, impermeable y una chaqueta cortavientos para protegerte de la lluvia y el viento.")
+
+    # 33. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
           Meteo(humedad=P(lambda humedad: humedad <= 30)),
-          Meteo(uv=P(lambda uv: uv > 5)),
-          Meteo(viento=P(lambda viento: viento > 10)),
-          Meteo(sol=1),  # Soleado
-          Meteo(precip=0))  # Sin precipitación
-    def muy_calido_baja_humedad_viento_fuerte(self):
-        self.consejos.append("Clima muy cálido con viento fuerte y baja humedad. Usa ropa ligera, protector solar y gafas.")
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_alto_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido con UV alto y sin viento. Usa ropa ligera, protector solar, gafas de sol y mantente hidratado.")
 
+    # 34. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_alto_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido con UV alto y lluvia. Usa ropa ligera, impermeable y protector solar, ideal para el clima caluroso y lluvioso.")
+
+    # 35. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_alto_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido con UV alto y viento moderado. Usa ropa ligera, protector solar, gafas de sol y una chaqueta ligera para el viento.")
+
+    # 36. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_alto_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido con UV alto, viento moderado y lluvia. Usa ropa ligera, impermeable, protector solar y una chaqueta cortavientos para protegerte del viento y la lluvia.")
+
+        # 37. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_alto_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido con alta humedad y UV alto. Usa ropa ligera, protector solar, gafas de sol y mantente bien hidratado.")
+
+    # 38. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_alto_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido con alta humedad, UV alto y lluvia. Usa ropa ligera e impermeable, protector solar, y trata de mantenerte fresco en la lluvia.")
+
+    # 39. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_alto_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido con alta humedad, UV alto y viento moderado. Usa ropa ligera y transpirable, protector solar y una chaqueta ligera.")
+
+    # 40. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_alto_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido con alta humedad, viento moderado y lluvia. Usa ropa ligera e impermeable, con chaqueta cortavientos y protector solar.")
+
+    # 41. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_alto_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido y seco, con UV alto. Usa ropa ligera, gafas de sol, protector solar y mantente hidratado.")
+
+    # 42. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_alto_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido y seco, con UV alto y lluvia. Usa ropa ligera, impermeable, protector solar y mantente hidratado durante las lluvias.")
+
+    # 43. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_baja_humedad_uv_alto_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido y seco, con UV alto y viento moderado. Usa ropa ligera, gafas de sol, protector solar y una chaqueta ligera para el viento.")
+
+    # 44. Clima cálido (26-35°C), baja humedad (0-30), alto UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad <= 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_baja_humedad_uv_alto_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido y seco, con UV alto, viento moderado y lluvia. Usa ropa ligera, impermeable y protector solar.")
+
+    # 45. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento calmado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_alto_viento_calma_despejado(self):
+        self.consejos.append("Clima cálido y húmedo con UV alto. Usa ropa ligera, gafas de sol, protector solar y mantente bien hidratado.")
+
+    # 46. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento calmado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 0)),
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_alto_viento_calma_lluvia(self):
+        self.consejos.append("Clima cálido y húmedo con UV alto y lluvia. Usa ropa ligera, impermeable y mantente bien hidratado.")
+
+    # 47. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento moderado, despejado
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=1))  # Despejado
+    def calido_alta_humedad_uv_alto_viento_moderado_despejado(self):
+        self.consejos.append("Clima cálido y húmedo con UV alto y viento moderado. Usa ropa ligera, protector solar, gafas de sol y mantente hidratado.")
+
+    # 48. Clima cálido (26-35°C), alta humedad (31-60), alto UV, viento moderado, lluvia
+    @Rule(Meteo(temp=P(lambda temp: 26 <= temp <= 35)),
+          Meteo(humedad=P(lambda humedad: humedad > 30)),
+          Meteo(uv=P(lambda uv: uv == 5)),
+          Meteo(viento=P(lambda viento: viento == 10)),
+          Meteo(sol=2))  # Lluvia
+    def calido_alta_humedad_uv_alto_viento_moderado_lluvia(self):
+        self.consejos.append("Clima cálido y húmedo con UV alto, viento moderado y lluvia. Usa ropa ligera, impermeable, protector solar y una chaqueta cortavientos.")
+        
     # Método para mostrar el consejo
     def mostrar_consejo(self):
         if not self.consejos:
             self.consejos.append("No hay una recomendación específica para esta combinación.")
         consejo_final = "\n".join(self.consejos)
         messagebox.showinfo("Consejo Vestimentario", consejo_final)
+
 
 # Interfaz gráfica con Tkinter
 root = tk.Tk()
@@ -177,9 +480,7 @@ temp_var = tk.IntVar()
 humedad_var = tk.IntVar()
 uv_var = tk.IntVar()
 viento_var = tk.IntVar()
-sol_var = tk.IntVar()  # 1: Soleado, 2: Nublado
-precip_var = tk.IntVar()  # 1: Lluvia, 2: Nieve
-
+sol_var = tk.IntVar()  # 1: Despejado, 2: Lluvia
 
 # Función llamada cuando el usuario envía sus elecciones
 def enviar_opciones():
@@ -188,13 +489,12 @@ def enviar_opciones():
     uv = uv_var.get()
     viento = viento_var.get()
     sol = sol_var.get()
-    precip = precip_var.get()
     
     # Ejecutar motor
     consejero = ConsejeroVestimentario()
     consejero.reset()
 
-    consejero.declare(Meteo(temp=temp, humedad=humedad, uv=uv, viento=viento, sol=sol, precip=precip))
+    consejero.declare(Meteo(temp=temp, humedad=humedad, uv=uv, viento=viento, sol=sol, precip=sol))
     consejero.run()
     consejero.mostrar_consejo()
 
@@ -217,19 +517,13 @@ tk.Radiobutton(root, text="Medio", variable=uv_var, value=5).pack()
 
 # Widgets para el viento
 tk.Label(root, text="Viento:").pack()
-tk.Radiobutton(root, text="Calma", variable=viento_var, value=0).pack()
+tk.Radiobutton(root, text="Calmado", variable=viento_var, value=0).pack()
 tk.Radiobutton(root, text="Moderado", variable=viento_var, value=10).pack()
-tk.Radiobutton(root, text="Extremo", variable=viento_var, value=20).pack()
 
-# Widgets para sol y nubes
-tk.Label(root, text="Condiciones de sol:").pack()
-tk.Radiobutton(root, text="Soleado", variable=sol_var, value=1).pack()
-tk.Radiobutton(root, text="Nublado", variable=sol_var, value=2).pack()
-
-# Widgets para precipitaciones
-tk.Label(root, text="Precipitaciones:").pack()
-tk.Radiobutton(root, text="Lluvia", variable=precip_var, value=1).pack()
-tk.Radiobutton(root, text="Nieve", variable=precip_var, value=2).pack()
+# Widgets para la condición del día
+tk.Label(root, text="Condición del día:").pack()
+tk.Radiobutton(root, text="Despejado", variable=sol_var, value=1).pack()
+tk.Radiobutton(root, text="Lluvia", variable=sol_var, value=2).pack()
 
 # Botón de envío
 submit_button = tk.Button(root, text="Enviar", command=enviar_opciones)
